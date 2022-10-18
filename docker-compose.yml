@@ -7,6 +7,9 @@ services:
   kali: 
     container_name: Attacker
     build: ./KaliDockerfile
+    networks:
+       appnet:
+          ipv4_address: 172.24.2.11
   ubuntu2: 
     container_name: Logging_Server
     build: ./Ubuntu
@@ -15,16 +18,30 @@ services:
      build: ./WebServer
      ports: 
        - "8000:80"
-       - "3306:3306"
+      #  - "3306:3306"
      networks:
        appnet:
-          ipv4_address: 172.24.2.2
-
+          ipv4_address: 172.24.2.100
      volumes:
-       - ./Webpage:/var/www/html
+       - ./WebpageFiles:/var/www/html
 
-     
-      
+  mariadb:
+      container_name: db
+      image: "mariadb:10.0"
+      restart: 'always'
+      command: '--default-authentication-plugin=mysql_native_password'
+      environment:
+        MYSQL_ROOT_PASSWORD: "password"
+        MYSQL_USER: "test"
+        MYSQL_PASSWORD: "test"     
+      ports:
+        - "3306:3306"   
+      volumes:
+        - ./DBConfigFiles/3204.sql:/docker-entrypoint-initdb.d/3204.sql
+      networks:
+        appnet:
+            ipv4_address: 172.24.2.101
+
 networks:
     appnet:
         driver: bridge
@@ -34,4 +51,5 @@ networks:
                 - subnet: "172.24.2.0/16"
 
 volumes:
-  Webpage:
+  WebpageFiles:
+  DBConfigFiles:
