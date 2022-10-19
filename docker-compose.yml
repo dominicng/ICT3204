@@ -1,18 +1,13 @@
 version: "2.1"
 
 services:
-  ubuntu:
-    container_name: Victim
-    build: ./Ubuntu
   kali: 
     container_name: Attacker
     build: ./KaliDockerfile
     networks:
        appnet:
           ipv4_address: 172.24.2.11
-  ubuntu2: 
-    container_name: Logging_Server
-    build: ./Ubuntu
+
   webserver:
      container_name: WebServer
      build: ./WebServer
@@ -41,7 +36,15 @@ services:
       networks:
         appnet:
             ipv4_address: 172.24.2.101
-
+  
+  elk:
+    container_name: elkStack
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+  
 networks:
     appnet:
         driver: bridge
@@ -53,3 +56,6 @@ networks:
 volumes:
   WebpageFiles:
   DBConfigFiles:
+  elkFiles:
+
+
