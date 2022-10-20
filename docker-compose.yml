@@ -40,10 +40,16 @@ services:
   elk:
     container_name: elkStack
     image: sebp/elk
+    mem_reservation: 4g
     ports:
       - "5601:5601"
       - "9200:9200"
       - "5044:5044"
+    environment:
+      ES_JAVA_OPTS: "-Xms200m -Xmx200m -XX:MaxDirectMemorySize=55m" 
+      ES_HEAP_SIZE: "2g"
+      LS_HEAP_SIZE: "1g"
+
   
 networks:
     appnet:
