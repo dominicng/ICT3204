@@ -1,0 +1,1 @@
+filebeat setup && service filebeat start

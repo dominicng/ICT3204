@@ -18,8 +18,6 @@
 --
 -- Table structure for table `admin`
 --
-CREATE Database clinic_db;
-USE clinic_db;
 
 DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

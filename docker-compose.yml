@@ -7,9 +7,6 @@ services:
     networks:
        appnet:
           ipv4_address: 172.24.2.11
-    volumes:
-      - ./Wordlists:/usr/share/wordlists/dirbuster
-      - ./AttackScript:/tmp
 
   webserver:
      container_name: WebServer
@@ -22,6 +19,8 @@ services:
           ipv4_address: 172.24.2.100
      volumes:
        - ./WebpageFiles:/var/www/html
+  
+
 
   mariadb:
       container_name: db
@@ -39,7 +38,7 @@ services:
       networks:
         appnet:
             ipv4_address: 172.24.2.101
-
+  
   elk:
     container_name: elkStack
     image: sebp/elk
@@ -52,7 +51,11 @@ services:
       ES_JAVA_OPTS: "-Xms200m -Xmx200m -XX:MaxDirectMemorySize=55m" 
       ES_HEAP_SIZE: "2g"
       LS_HEAP_SIZE: "1g"
+    networks:
+        appnet:
+            ipv4_address: 172.24.2.102
 
+  
 networks:
     appnet:
         driver: bridge
@@ -65,3 +68,5 @@ volumes:
   WebpageFiles:
   DBConfigFiles:
   elkFiles:
+
+
