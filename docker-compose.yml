@@ -3,6 +3,7 @@ version: "2.1"
 services:
   kali: 
     container_name: Attacker
+    hostname: Attacker
     build: ./KaliDockerfile
     networks:
        appnet:
@@ -10,6 +11,7 @@ services:
 
   webserver:
      container_name: WebServer
+     hostname: Web_Server
      build: ./WebServer
      ports: 
        - "8000:80"
@@ -17,13 +19,16 @@ services:
      networks:
        appnet:
           ipv4_address: 172.24.2.100
+     depends_on:
+      elk:
+        condition: service_healthy
      volumes:
        - ./WebpageFiles:/var/www/html
-  
-
+     
 
   mariadb:
       container_name: db
+      hostname: db
       image: "mariadb:10.0"
       restart: 'always'
       command: '--default-authentication-plugin=mysql_native_password'
@@ -41,6 +46,7 @@ services:
   
   elk:
     container_name: elkStack
+    hostname: elkStack
     image: sebp/elk
     mem_reservation: 4g
     ports:
@@ -51,6 +57,11 @@ services:
       ES_JAVA_OPTS: "-Xms200m -Xmx200m -XX:MaxDirectMemorySize=55m" 
       ES_HEAP_SIZE: "2g"
       LS_HEAP_SIZE: "1g"
+    healthcheck:
+      test: curl --fail http://localhost:5601 || exit 1
+      interval: 5s
+      retries: 20
+      timeout: 10s
     networks:
         appnet:
             ipv4_address: 172.24.2.102
